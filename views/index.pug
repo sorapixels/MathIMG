@@ -1,0 +1,15 @@
+- var isProduction = (process.env.NODE_ENV === 'production');
+- var mainJsPath = isProduction ? '/js/main.js' : 'http://localhost:8080/main.js'
+
+doctype html
+html
+  head
+    title Formula IMG
+    link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.2.3/css/bulma.min.css')
+    link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans')
+
+  body
+    #app
+    script(src='https://apis.google.com/js/client.js' defer)
+    script(src='https://cdn.jsdelivr.net/vue/2.0.3/vue.min.js' defer)
+    script(src=mainJsPath defer)
