@@ -1,7 +1,7 @@
 <template lang="pug">
 section.hero
   .hero-body: .container.has-text-centered
-    h1.title Formula IMG
+    h1.title MathIMG
     h2.subtitle Beautiful math image generator
 </template>
 

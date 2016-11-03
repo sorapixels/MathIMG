@@ -1,3 +1,3 @@
-### formula-img
+### MathIMG
 
 Beautiful math image generator
