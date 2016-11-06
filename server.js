@@ -10,13 +10,17 @@ app.set('view engine', 'pug');
 
 app.get('/', (req, res) => res.render('index'));
 
-app.get('/:math', (req, res) => {
-  const opts = {math: base64url.decode(req.params.math), svg: true};
+app.get('/:math.:type', (req, res) => {
+  const type = req.params.type;
+  const opts = {math: base64url.decode(req.params.math)};
+  opts[type] = true;
+
   mathjax.typeset(opts, data => {
     const err = data.errors && data.errors.join();
-    if(err) return res.status(404).send('Not found');
-    res.set('Content-Type', 'image/svg+xml');
-    res.send(data.svg);
+    if(err) return res.status(400).send('Bad request');
+
+    res.set('Content-Type', (type === 'svg') ? 'image/svg+xml' : 'image/png');
+    return res.send(data[type]);
   });
 });
 
