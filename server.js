@@ -17,15 +17,16 @@ app.get('/:math.:type', (req, res) => {
 
   mathjax.typeset(opts, data => {
     const err = data.errors && data.errors.join();
-
     if(err) return res.status(400).send('Bad request');
 
     res.set('Cache-Control', 'public, max-age=31557600');
-    res.set('Content-Type', (type === 'svg') ? 'image/svg+xml' : 'application/force-download');
 
     if(type === 'svg') {
+      res.set('Content-Type', 'image/svg+xml');
       res.send(data.svg);
     } else {
+      res.set('Content-Disposition', `attachment; filename=mathimg-${Date.now()}.png`);
+      res.set('Content-Type', 'image/png');
       svg2png(data.svg, {height: 480}).then(buf => res.send(buf));
     }
   });
