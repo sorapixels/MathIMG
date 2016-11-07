@@ -8,21 +8,19 @@ section.section.generator: .columns: .column.is-10.is-offset-1
         span.example.button.is-small Examples:
         each btn in ['Algebra','Calculus','Stats','Sets','Trig','Geometry','Chemistry','Physics']
           a.button.is-small(@click=`setSampleText('${btn}')`)= btn
-      .column.type-selector.has-text-right
-        label.radio
-          input(type='radio', name='type', value='svg', v-model='type', @change='isLoading = true')
-          | SVG
-        label.radio
-          input(type='radio', name='type', value='png', v-model='type', @change='isLoading = true')
-          | PNG
 
   .image-wrapper.has-text-centered(v-if='tex.length > 0', v-show='!isInvalid')
-    img.formula(:src='originalUrl', @error='onError', @load='onLoad')
-    .columns: .column.is-8.is-offset-2
-      label.label SVG file URL
-      p.control.has-addons.image-url
-        input.input.is-expanded(type='text', v-model='imageUrl', @click='select', readonly)
-        a.button.is-info(@click='shorten', :class='{"is-loading": shortening}') Shorten
+    img.formula(:src='originalURL("svg")', @error='onError', @load='onLoad')
+
+  .columns: .column.is-10.is-offset-1(v-if='tex.length > 0', v-show='!isInvalid')
+    label.label SVG file URL
+    .control.is-grouped
+      p.control.is-expanded.image-url
+        input.input(type='text', v-model='imageURL', @click='select', readonly)
+      p.control
+        a.button.is-info(@click='shortenURL', :class='{"is-loading": shortening}') Shorten URL
+      p.control
+        a.button.is-info(:href='originalURL("png")') Download PNG
 </template>
 
 <script>
@@ -32,18 +30,15 @@ import sampleFormulas from './sampleFomulas';
 export default {
   data: () => ({
     tex: '',
-    type: 'svg',
-    imageUrl: '',
+    imageURL: '',
     shortening: false,
     isInvalid: false,
     isLoading: false,
   }),
-  computed: {
-    originalUrl() {
-      return `${window.location.href}${base64url.encode(this.tex)}.${this.type}`;
-    },
-  },
   methods: {
+    originalURL(type) {
+      return `${window.location.href}${base64url.encode(this.tex)}.${type}`;
+    },
     setSampleText(name) {
       this.tex = sampleFormulas[name];
       this.isLoading = true;
@@ -55,17 +50,17 @@ export default {
     onLoad(e) {
       this.isInvalid = false;
       this.isLoading = false;
-      this.imageUrl = this.originalUrl;
+      this.imageURL = this.originalURL('svg');
     },
     select(e) {
       e.srcElement.select();
     },
-    shorten() {
+    shortenURL() {
       this.shortening = true;
       gapi.client.setApiKey('AIzaSyDGK22NGcQJXUcYZxmKjKF9v6pFAaIWSDA');
       gapi.client.load('urlshortener', 'v1',() => {
-    		gapi.client.urlshortener.url.insert({resource: {longUrl: this.originalUrl}}).execute(resp => {
-          this.imageUrl = resp.id;
+    		gapi.client.urlshortener.url.insert({resource: {longUrl: this.originalURL('svg')}}).execute(resp => {
+          this.imageURL = resp.id;
           this.shortening = false;
     		});
     	});
