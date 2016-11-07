@@ -5,7 +5,7 @@ footer.footer.content.has-text-centered
     span &nbsp;by&nbsp;
     a(href='https://xar.sh', target='_blank') xarsh
     span &nbsp;@&nbsp;
-    a(href='https://sorapixels.com', target='_blank') Sorapixels
+    a(href='https://sorapixels.com', target='_blank') Sorapixels Inc.
 </template>
 
 <style lang="sass">

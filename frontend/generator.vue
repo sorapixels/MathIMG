@@ -3,11 +3,10 @@ section.section.generator: .columns: .column.is-10.is-offset-1
   .notification
     p.control(:class='{"is-loading": isLoading}')
       input.input.is-large(type='text', placeholder='E=mc^2', v-model='tex', :class='{"is-danger": isInvalid}', spellcheck='false')
-    .columns
-      .column.is-three-quarters.buttons
-        span.example.button.is-small Examples:
-        each btn in ['Algebra','Calculus','Stats','Sets','Trig','Geometry','Chemistry','Physics']
-          a.button.is-small(@click=`setSampleText('${btn}')`)= btn
+    .buttons.has-text-centered
+      span.example.button.is-small Examples:
+      each btn in ['Algebra','Calculus','Stats','Sets','Trig','Geometry','Chemistry','Physics']
+        a.button.is-small(@click=`setSampleText('${btn}')`)= btn
 
   .image-wrapper.has-text-centered(v-if='tex.length > 0', v-show='!isInvalid')
     img.formula(:src='originalURL("svg")', @error='onError', @load='onLoad')
@@ -74,7 +73,7 @@ export default {
   flex: 1
 
 .buttons .button
-  margin: 2px 2px 0 0
+  margin: 2px 4px 0 0
   &.example
     border: none
     background: transparent
@@ -87,9 +86,6 @@ export default {
 
 .formula
   max-width: 360px
-  max-height: 120px
-  min-height: 80px
-  width: auto
-  height: auto
+  height: 120px
   margin: 40px auto 80px
 </style>
