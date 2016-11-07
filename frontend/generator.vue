@@ -11,7 +11,7 @@ section.section.generator: .columns: .column.is-10.is-offset-1
   .image-wrapper.has-text-centered(v-if='tex.length > 0', v-show='!isInvalid')
     img.formula(:src='originalURL("svg")', @error='onError', @load='onLoad')
 
-  .columns: .column.is-10.is-offset-1(v-if='tex.length > 0', v-show='!isInvalid')
+  .columns: .column(v-if='tex.length > 0', v-show='!isInvalid')
     label.label SVG file URL
     .control.is-grouped
       p.control.is-expanded.image-url
