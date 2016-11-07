@@ -92,5 +92,9 @@ export default {
 
 .formula
   max-width: 360px
+  max-height: 120px
+  min-height: 80px
+  width: auto
+  height: auto
   margin: 40px auto 80px
 </style>

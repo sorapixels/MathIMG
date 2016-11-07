@@ -8,7 +8,7 @@ footer.footer.content.has-text-centered
     a(href='https://sorapixels.com', target='_blank') Sorapixels
 </template>
 
-<style lang='sass'>
+<style lang="sass">
 .footer
   background: white;
 </style>
