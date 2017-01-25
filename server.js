@@ -11,23 +11,24 @@ app.set('view engine', 'pug');
 
 app.get('/', (req, res) => res.render('index'));
 
-app.get('/:math.:type', (req, res) => {
+app.get('/:math.(invert.)?:type', (req, res) => {
+  res.set('Cache-Control', 'public, max-age=31557600');
+
   const type = req.params.type || 'svg';
   const opts = {math: base64url.decode(req.params.math), svg: true};
 
   mathjax.typeset(opts, data => {
-    const err = data.errors && data.errors.join();
-    if(err) return res.status(400).send('Bad request');
+    if(data.errors && data.errors.join()) return res.status(400).send('Bad request');
 
-    res.set('Cache-Control', 'public, max-age=31557600');
+    const svg = (req.params['0'] === 'invert.') ? data.svg.replace(/currentColor/g, '#fff') : data.svg;
 
     if(type === 'svg') {
       res.set('Content-Type', 'image/svg+xml');
-      res.send(data.svg);
+      res.send(svg);
     } else {
       res.set('Content-Disposition', `attachment; filename=mathimg-${Date.now()}.png`);
       res.set('Content-Type', 'image/png');
-      svg2png(data.svg, {height: 480}).then(buf => res.send(buf));
+      svg2png(svg, {height: 480}).then(buf => res.send(buf));
     }
   });
 });

@@ -2,24 +2,32 @@
 section.section.generator: .columns: .column.is-10.is-offset-1
   .notification
     p.control(:class='{"is-loading": isLoading}')
-      input.input.is-large(type='text', placeholder='E=mc^2', v-model='tex', :class='{"is-danger": isInvalid}', spellcheck='false')
-    .buttons.has-text-centered
-      span.example.button.is-small Examples:
-      each btn in ['Algebra','Calculus','Stats','Sets','Trig','Geometry','Chemistry','Physics']
-        a.button.is-small(@click=`setSampleText('${btn}')`)= btn
+      input.input.is-large(
+        type='text', placeholder='E=mc^2', v-model='tex',
+        :class='{"is-danger": isInvalid}', spellcheck='false')
+
+    .columns
+      .column.is-10.buttons.has-text-left
+        span.example.button.is-small.is-hidden-mobile.is-disabled Examples:
+        each btn in ['Algebra','Calculus','Stats','Trig','Geometry','Chemistry','Physics']
+          a.button.is-small(@click=`setSampleText('${btn}')`)= btn
+      .column.invert-switch.has-text-right.is-hidden-mobile
+        label.checkbox
+          input(type='checkbox', v-model='invert', @click='toggleInvert')
+          | Invert
 
   .image-wrapper.has-text-centered(v-if='tex.length > 0', v-show='!isInvalid')
-    img.formula(:src='originalURL("svg")', @error='onError', @load='onLoad')
+    img.formula(:src='imageURL("svg")', @error='onError', @load='onLoad', :class='{inverted: invert}')
 
   .columns: .column(v-if='tex.length > 0', v-show='!isInvalid')
     label.label SVG file URL
     .control.is-grouped
       p.control.is-expanded.image-url
-        input.input(type='text', v-model='imageURL', @click='select', readonly)
+        input.input(type='text', v-model='URLBox', @click='select', readonly)
       p.control
         a.button.is-info(@click='shortenURL', :class='{"is-loading": shortening}') Shorten URL
       p.control
-        a.button.is-info(:href='originalURL("png")') Download PNG
+        a.button.is-info(:href='imageURL("png")') Download PNG
 </template>
 
 <script>
@@ -29,14 +37,21 @@ import sampleFormulas from './sampleFomulas';
 export default {
   data: () => ({
     tex: '',
-    imageURL: '',
+    URLBox: '',
     shortening: false,
     isInvalid: false,
     isLoading: false,
+    invert: false
   }),
   methods: {
-    originalURL(type) {
-      return `${window.location.href}${base64url.encode(this.tex)}.${type}`;
+    imageURL(type) {
+      const math = base64url.encode(this.tex);
+      const opts = this.invert ? 'invert.' : '';
+      return `${window.location.href}${math}.${opts}${type}`;
+    },
+    toggleInvert() {
+      document.documentElement.classList.toggle('inverted');
+      this.onLoad();
     },
     setSampleText(name) {
       this.tex = sampleFormulas[name];
@@ -49,7 +64,7 @@ export default {
     onLoad(e) {
       this.isInvalid = false;
       this.isLoading = false;
-      this.imageURL = this.originalURL('svg');
+      this.URLBox = this.imageURL('svg');
     },
     select(e) {
       e.srcElement.select();
@@ -58,8 +73,8 @@ export default {
       this.shortening = true;
       gapi.client.setApiKey('AIzaSyDGK22NGcQJXUcYZxmKjKF9v6pFAaIWSDA');
       gapi.client.load('urlshortener', 'v1',() => {
-    		gapi.client.urlshortener.url.insert({resource: {longUrl: this.originalURL('svg')}}).execute(resp => {
-          this.imageURL = resp.id;
+    		gapi.client.urlshortener.url.insert({resource: {longUrl: this.imageURL('svg')}}).execute(resp => {
+          this.URLBox = resp.id;
           this.shortening = false;
     		});
     	});
@@ -69,6 +84,12 @@ export default {
 </script>
 
 <style lang="sass">
+html, img.formula
+  transition: .3s
+  filter: invert(0)
+  &.inverted
+    filter: invert(90%)
+
 .section.generator
   flex: 1
 
@@ -77,7 +98,11 @@ export default {
   &.example
     border: none
     background: transparent
-
+.invert-switch
+  font-size: 90%
+  margin-top: 6px
+  input
+    margin-right: 5px
 .type-selector
   .radio
     padding: 5px 7px 0 0
