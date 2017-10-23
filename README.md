@@ -1,3 +1,5 @@
-### formula-img
+### mathimg
+
+<https://mathimg.com>
 
 Beautiful math image generator
