@@ -1,0 +1,12 @@
+{
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "dependencies": {
+    "base64-url": "^2.0.0",
+    "firebase-admin": "~5.2.1",
+    "firebase-functions": "^0.6.2",
+    "mathjax-node": "^1.2.1",
+    "svg2png": "^4.1.1"
+  },
+  "private": true
+}
