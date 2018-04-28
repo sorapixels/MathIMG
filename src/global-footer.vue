@@ -10,5 +10,5 @@ footer.footer.content.has-text-centered
 
 <style lang="sass">
 .footer
-  background: white;
+  background: white
 </style>

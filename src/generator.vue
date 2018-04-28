@@ -31,6 +31,7 @@ section.section.generator: .columns: .column.is-10.is-offset-1
 </template>
 
 <script>
+import axios from 'axios';
 import base64url from 'base64-url';
 import sampleFormulas from './sampleFomulas';
 
@@ -69,15 +70,19 @@ export default {
     select(e) {
       e.srcElement.select();
     },
-    shortenURL() {
+    async shortenURL () {
       this.shortening = true;
-      gapi.client.setApiKey('AIzaSyDGK22NGcQJXUcYZxmKjKF9v6pFAaIWSDA');
-      gapi.client.load('urlshortener', 'v1',() => {
-    		gapi.client.urlshortener.url.insert({resource: {longUrl: this.imageURL('svg')}}).execute(resp => {
-          this.URLBox = resp.id;
-          this.shortening = false;
-    		});
-    	});
+      const url = 'https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=';
+      const api_key = 'AIzaSyA36RWnvD6DnDY-7ItVaVRdc_Jx_pGsEAM';
+      const longDynamicLink = `https://j7a6v.app.goo.gl/?link=${this.imageURL('svg')}`;
+      try {
+        const res = await axios.post(`${url}${api_key}`, {longDynamicLink, suffix: {option: 'SHORT'}})
+        this.URLBox = `https://mathimg.com/r/${res.data.shortLink.split('/')[3]}`;
+      } catch (error) {
+        console.error(error);
+      } finally {
+        this.shortening = false;
+      }
     }
   }
 }

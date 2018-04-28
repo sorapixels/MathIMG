@@ -3,6 +3,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const autoprefixer = require('autoprefixer');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 module.exports = {
   entry: {
@@ -21,8 +22,6 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({'process.env': {NODE_ENV: '"production"'}}),
-    new webpack.optimize.ModuleConcatenationPlugin(),
-    new webpack.optimize.UglifyJsPlugin({sourceMap: true, compress: {warnings: false}}),
-    new webpack.LoaderOptionsPlugin({minimize: true})
+    new UglifyJsPlugin()
   ]
 };
