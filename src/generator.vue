@@ -76,7 +76,7 @@ export default {
       const api_key = 'AIzaSyA36RWnvD6DnDY-7ItVaVRdc_Jx_pGsEAM';
       const longDynamicLink = `https://j7a6v.app.goo.gl/?link=${this.imageURL('svg')}`;
       try {
-        const res = await axios.post(`${url}${api_key}`, {longDynamicLink, suffix: {option: 'SHORT'}})
+        const res = await axios.post(url + api_key, {longDynamicLink, suffix: {option: 'SHORT'}})
         this.URLBox = `https://mathimg.com/r/${res.data.shortLink.split('/')[3]}`;
       } catch (error) {
         console.error(error);

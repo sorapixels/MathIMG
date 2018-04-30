@@ -1,9 +1,7 @@
 <template lang="pug">
 .container
   global-header
-
   generator
-
   global-footer
 </template>
 
